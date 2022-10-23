@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+  objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+  <changeSet author="admin" id="1">
+    <createTable tableName="LISTENING_PARTY">
+      <column name="PARTY_DATE" type="TIMESTAMP">
+        <constraints nullable="false"/>
+      </column>
+      <column name="ARTIST" type="VARCHAR(512)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="ALBUM" type="VARCHAR(512)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="ANNOUNCEMENT_TWEET" type="VARCHAR(512)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="REPLAY_LINK" type="VARCHAR(512)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="TWEETERS" type="VARCHAR(512)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="COLLECTION_LINK" type="VARCHAR(512)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="ALBUM_LINK" type="VARCHAR(512)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="ALBUM_IMAGE_LARGE" type="VARCHAR(512)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="ALBUM_IMAGE_SMALL" type="VARCHAR(512)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="ALBUM_RELEASE_DATE" type="VARCHAR(256)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="TTLP_NO" type="INT">
+        <constraints nullable="false" unique="true" primaryKey="true"/>
+      </column>
+      <column name="LAST_STATE" type="INT" defaultValue="0">
+        <constraints nullable="false"/>
+      </column>
+      <column name="REQUIRES_UPDATE" type="BOOLEAN" defaultValue="true">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <rollback>
+      <dropTable tableName="LISTENING_PARTY"/>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="2" author="admin">
+    <createTable tableName="LISTENING_PARTY_TWEET">
+      <column name="ID" type="BIGINT" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="TWEET_ID" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="LISTENING_PARTY_ID" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="TEXT" type="VARCHAR(512)"/>
+      <column name="AUTHOR" type="VARCHAR(512)"/>
+      <column name="IN_REPLY_TO_USERID" type="VARCHAR(64)"/>
+      <column name="CREATED_AT" type="TIMESTAMP"/>
+      <column name="LIKES" type="INT"/>
+      <column name="QUOTE" type="INT"/>
+      <column name="REPLY" type="INT"/>
+      <column name="RETWEET" type="INT"/>
+      <column name="GEO" type="VARCHAR(512)"/>
+      <column name="ATTACHMENTS" type="VARCHAR(512)"/>
+    </createTable>
+
+    <addForeignKeyConstraint baseColumnNames="LISTENING_PARTY_ID"
+      baseTableName="LISTENING_PARTY_TWEET"
+      constraintName="FK_LISTENING_PARTY_TWEET_ID"
+      referencedColumnNames="TTLP_NO"
+      referencedTableName="LISTENING_PARTY"/>
+
+  </changeSet>
+
+
+</databaseChangeLog>
