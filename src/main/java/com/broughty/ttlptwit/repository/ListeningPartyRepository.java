@@ -1,7 +1,9 @@
 package com.broughty.ttlptwit.repository;
 
 import static com.broughty.ttlptwit.database.jooq.data.Tables.LISTENING_PARTY;
+import static com.broughty.ttlptwit.database.jooq.data.Tables.LISTENING_PARTY_TWEET;
 
+import com.broughty.ttlptwit.aggregation.ListeningPartyTweetDto;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyRecord;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyTweetRecord;
 import java.util.List;
@@ -58,6 +60,19 @@ public class ListeningPartyRepository {
     return dsl.selectFrom(LISTENING_PARTY)
               .where(LISTENING_PARTY.TTLP_NO.eq(ttlpId))
               .fetchAny();
+  }
+
+  public List<ListeningPartyTweetDto> getListeningPartyTweets(final Integer ttlpId) {
+    return
+        dsl.select(LISTENING_PARTY_TWEET.LISTENING_PARTY_ID,
+                   LISTENING_PARTY.ARTIST,
+                   LISTENING_PARTY.ALBUM,
+                   LISTENING_PARTY_TWEET.TWEET_ID,
+                   LISTENING_PARTY_TWEET.TEXT)
+           .from(LISTENING_PARTY_TWEET)
+           .innerJoin(LISTENING_PARTY)
+           .on(LISTENING_PARTY.TTLP_NO.eq(LISTENING_PARTY_TWEET.LISTENING_PARTY_ID))
+           .where(LISTENING_PARTY.TTLP_NO.eq(ttlpId)).fetch().into(ListeningPartyTweetDto.class);
   }
 
   public int update(final ListeningPartyRecord listeningPartyRecord) {

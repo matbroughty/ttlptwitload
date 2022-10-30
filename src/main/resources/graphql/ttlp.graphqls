@@ -1,0 +1,24 @@
+type Query {
+    listeningParties: [ListeningParty]
+    listeningPartyById(ttlpNo :ID): ListeningParty
+    listeningPartyTweetsById(ttlpNo :ID): [ListeningPartyTweet]
+}
+
+type ListeningParty {
+    ttlpNo: ID
+    artist: String
+    album: String
+    replayLink: String
+    collectionLink: String
+    partyDate: String
+}
+
+type ListeningPartyTweet {
+    id: ID
+    text: String
+    ttlpNo: ID
+    artist: String
+    album: String
+}
+
+
