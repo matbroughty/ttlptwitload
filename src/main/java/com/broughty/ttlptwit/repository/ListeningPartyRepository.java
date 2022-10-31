@@ -7,6 +7,9 @@ import com.broughty.ttlptwit.aggregation.ListeningPartyTweetDto;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyRecord;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyTweetRecord;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +78,7 @@ public class ListeningPartyRepository {
            .where(LISTENING_PARTY.TTLP_NO.eq(ttlpId)).fetch().into(ListeningPartyTweetDto.class);
   }
 
+
   public int update(final ListeningPartyRecord listeningPartyRecord) {
     return dsl.update(LISTENING_PARTY).set(listeningPartyRecord)
               .where(LISTENING_PARTY.TTLP_NO.eq(listeningPartyRecord.getTtlpNo()))
@@ -82,4 +86,29 @@ public class ListeningPartyRepository {
   }
 
 
+  public Map<ListeningPartyRecord, List<ListeningPartyTweetDto>> getListeningPartiesTweets(final List<ListeningPartyRecord> listeningParties) {
+
+    List<Integer> partyIds = listeningParties.stream().map(ListeningPartyRecord::getTtlpNo).toList();
+
+    List<ListeningPartyTweetDto> tweetDtoList = dsl.select(LISTENING_PARTY_TWEET.LISTENING_PARTY_ID,
+                                                           LISTENING_PARTY.ARTIST,
+                                                           LISTENING_PARTY.ALBUM,
+                                                           LISTENING_PARTY_TWEET.TWEET_ID,
+                                                           LISTENING_PARTY_TWEET.TEXT)
+                                                   .from(LISTENING_PARTY_TWEET)
+                                                   .innerJoin(LISTENING_PARTY)
+                                                   .on(LISTENING_PARTY.TTLP_NO.eq(LISTENING_PARTY_TWEET.LISTENING_PARTY_ID))
+                                                   .where(LISTENING_PARTY.TTLP_NO.in(partyIds)).fetch().into(ListeningPartyTweetDto.class);
+
+    return tweetDtoList.stream()
+                       .collect(Collectors.groupingBy(ListeningPartyTweetDto::ttlpNo)).entrySet().stream()
+                       .collect(
+                           Collectors.toMap(entry -> listeningParties.stream()
+                                                                     .filter(lp -> lp.getTtlpNo().equals(entry.getKey()))
+                                                                     .findFirst()
+                                                                     .orElse(null),
+                                            Entry::getValue));
+
+
+  }
 }

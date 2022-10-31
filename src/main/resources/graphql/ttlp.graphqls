@@ -11,6 +11,7 @@ type ListeningParty {
     replayLink: String
     collectionLink: String
     partyDate: String
+    listeningPartyTweets: [ListeningPartyTweet]
 }
 
 type ListeningPartyTweet {
