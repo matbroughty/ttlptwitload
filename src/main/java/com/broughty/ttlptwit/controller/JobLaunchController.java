@@ -1,7 +1,5 @@
 package com.broughty.ttlptwit.controller;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -37,7 +35,6 @@ public class JobLaunchController {
   public ResponseEntity<String> importTweetData(@RequestParam(required = false) String apiCallId) throws Exception {
     LOGGER.info("Request to import tweet data with id {}", apiCallId);
     JobParametersBuilder jobParametersbuilder = new JobParametersBuilder()
-        //.addString("requestDate", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
         .addString("apiCallId", apiCallId);
     Long jobId = jobLauncher.run(job, jobParametersbuilder.toJobParameters()).getJobId();
     return ResponseEntity.status(HttpStatus.ACCEPTED).body("Twitter load Job requested. Job Id = " + jobId);
