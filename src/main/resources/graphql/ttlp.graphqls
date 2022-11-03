@@ -20,6 +20,14 @@ type ListeningPartyTweet {
     ttlpNo: ID
     artist: String
     album: String
+    author: String
+    geo: String
+    likes: Int
+    retweets: Int
+    quotes: Int
+    replies: Int
+    inReplyTo: String
+    createdAt: String
 }
 
 type Mutation {

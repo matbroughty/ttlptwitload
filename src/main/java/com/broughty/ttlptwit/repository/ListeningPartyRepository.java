@@ -71,7 +71,15 @@ public class ListeningPartyRepository {
                    LISTENING_PARTY.ARTIST,
                    LISTENING_PARTY.ALBUM,
                    LISTENING_PARTY_TWEET.TWEET_ID,
-                   LISTENING_PARTY_TWEET.TEXT)
+                   LISTENING_PARTY_TWEET.TEXT,
+                   LISTENING_PARTY_TWEET.AUTHOR,
+                   LISTENING_PARTY_TWEET.GEO,
+                   LISTENING_PARTY_TWEET.LIKES,
+                   LISTENING_PARTY_TWEET.RETWEET,
+                   LISTENING_PARTY_TWEET.QUOTE,
+                   LISTENING_PARTY_TWEET.REPLY,
+                   LISTENING_PARTY_TWEET.IN_REPLY_TO_USERID,
+                   LISTENING_PARTY_TWEET.CREATED_AT)
            .from(LISTENING_PARTY_TWEET)
            .innerJoin(LISTENING_PARTY)
            .on(LISTENING_PARTY.TTLP_NO.eq(LISTENING_PARTY_TWEET.LISTENING_PARTY_ID))
@@ -94,7 +102,16 @@ public class ListeningPartyRepository {
                                                            LISTENING_PARTY.ARTIST,
                                                            LISTENING_PARTY.ALBUM,
                                                            LISTENING_PARTY_TWEET.TWEET_ID,
-                                                           LISTENING_PARTY_TWEET.TEXT)
+                                                           LISTENING_PARTY_TWEET.TEXT,
+                                                           LISTENING_PARTY_TWEET.AUTHOR,
+                                                           LISTENING_PARTY_TWEET.GEO,
+                                                           LISTENING_PARTY_TWEET.LIKES,
+                                                           LISTENING_PARTY_TWEET.RETWEET,
+                                                           LISTENING_PARTY_TWEET.QUOTE,
+                                                           LISTENING_PARTY_TWEET.REPLY,
+                                                           LISTENING_PARTY_TWEET.IN_REPLY_TO_USERID,
+                                                           LISTENING_PARTY_TWEET.CREATED_AT
+                                                   )
                                                    .from(LISTENING_PARTY_TWEET)
                                                    .innerJoin(LISTENING_PARTY)
                                                    .on(LISTENING_PARTY.TTLP_NO.eq(LISTENING_PARTY_TWEET.LISTENING_PARTY_ID))
