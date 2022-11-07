@@ -118,6 +118,14 @@ public class ListeningPartyUser extends TableImpl<ListeningPartyUserRecord> {
                                                                              PROFILE_URL          =
         createField(DSL.name("PROFILE_URL"), SQLDataType.VARCHAR(512), this, "");
 
+    /**
+     * The class holding records for this type
+     */
+    @Override
+    public Class<ListeningPartyUserRecord> getRecordType() {
+        return ListeningPartyUserRecord.class;
+    }
+
     private ListeningPartyUser(Name alias, Table<ListeningPartyUserRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -149,14 +157,6 @@ public class ListeningPartyUser extends TableImpl<ListeningPartyUserRecord> {
 
     public <O extends Record> ListeningPartyUser(Table<O> child, ForeignKey<O, ListeningPartyUserRecord> key) {
         super(child, key, LISTENING_PARTY_USER);
-    }
-
-    /**
-     * The class holding records for this type
-     */
-    @Override
-    public Class<ListeningPartyUserRecord> getRecordType() {
-        return ListeningPartyUserRecord.class;
     }
 
     @Override
@@ -230,7 +230,8 @@ public class ListeningPartyUser extends TableImpl<ListeningPartyUserRecord> {
     }
 
     /**
-     * Convenience mapping calling {@link SelectField#convertFrom(Class, Function)}.
+     * Convenience mapping calling {@link SelectField#convertFrom(Class,
+     * Function)}.
      */
     public <U> SelectField<U> mapping(Class<U> toType,
                                       Function13<? super Long, ? super String, ? super String, ? super String, ? super String, ? super String, ? super LocalDateTime, ? super Integer, ? super Integer, ? super Integer, ? super String, ? super String, ? super String, ? extends U> from) {

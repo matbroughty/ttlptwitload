@@ -23,10 +23,24 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
     private static final long serialVersionUID = 1L;
 
     /**
+     * Setter for <code>LISTENING_PARTY_USER.ID</code>.
+     */
+    public void setId(Long value) {
+        set(0, value);
+    }
+
+    /**
      * Create a detached ListeningPartyUserRecord
      */
     public ListeningPartyUserRecord() {
         super(ListeningPartyUser.LISTENING_PARTY_USER);
+    }
+
+    /**
+     * Setter for <code>LISTENING_PARTY_USER.USER_ID</code>.
+     */
+    public void setUserId(String value) {
+        set(1, value);
     }
 
     /**
@@ -63,41 +77,6 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
     }
 
     /**
-     * Getter for <code>LISTENING_PARTY_USER.ID</code>.
-     */
-    public Long getId() {
-        return (Long) get(0);
-    }
-
-    /**
-     * Setter for <code>LISTENING_PARTY_USER.ID</code>.
-     */
-    public void setId(Long value) {
-        set(0, value);
-    }
-
-    /**
-     * Getter for <code>LISTENING_PARTY_USER.USER_ID</code>.
-     */
-    public String getUserId() {
-        return (String) get(1);
-    }
-
-    /**
-     * Setter for <code>LISTENING_PARTY_USER.USER_ID</code>.
-     */
-    public void setUserId(String value) {
-        set(1, value);
-    }
-
-    /**
-     * Getter for <code>LISTENING_PARTY_USER.NAME</code>.
-     */
-    public String getName() {
-        return (String) get(2);
-    }
-
-    /**
      * Setter for <code>LISTENING_PARTY_USER.NAME</code>.
      */
     public void setName(String value) {
@@ -105,10 +84,10 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
     }
 
     /**
-     * Getter for <code>LISTENING_PARTY_USER.DISPLAY_NAME</code>.
+     * Getter for <code>LISTENING_PARTY_USER.ID</code>.
      */
-    public String getDisplayName() {
-        return (String) get(3);
+    public Long getId() {
+        return (Long) get(0);
     }
 
     /**
@@ -119,10 +98,10 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
     }
 
     /**
-     * Getter for <code>LISTENING_PARTY_USER.LOCATION</code>.
+     * Getter for <code>LISTENING_PARTY_USER.USER_ID</code>.
      */
-    public String getLocation() {
-        return (String) get(4);
+    public String getUserId() {
+        return (String) get(1);
     }
 
     /**
@@ -133,10 +112,10 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
     }
 
     /**
-     * Getter for <code>LISTENING_PARTY_USER.DESCRIPTION</code>.
+     * Getter for <code>LISTENING_PARTY_USER.NAME</code>.
      */
-    public String getDescription() {
-        return (String) get(5);
+    public String getName() {
+        return (String) get(2);
     }
 
     /**
@@ -147,10 +126,10 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
     }
 
     /**
-     * Getter for <code>LISTENING_PARTY_USER.CREATED_AT</code>.
+     * Getter for <code>LISTENING_PARTY_USER.DISPLAY_NAME</code>.
      */
-    public LocalDateTime getCreatedAt() {
-        return (LocalDateTime) get(6);
+    public String getDisplayName() {
+        return (String) get(3);
     }
 
     /**
@@ -161,10 +140,10 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
     }
 
     /**
-     * Getter for <code>LISTENING_PARTY_USER.FOLLOWERS</code>.
+     * Getter for <code>LISTENING_PARTY_USER.LOCATION</code>.
      */
-    public Integer getFollowers() {
-        return (Integer) get(7);
+    public String getLocation() {
+        return (String) get(4);
     }
 
     /**
@@ -175,10 +154,10 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
     }
 
     /**
-     * Getter for <code>LISTENING_PARTY_USER.FOLLOWING</code>.
+     * Getter for <code>LISTENING_PARTY_USER.DESCRIPTION</code>.
      */
-    public Integer getFollowing() {
-        return (Integer) get(8);
+    public String getDescription() {
+        return (String) get(5);
     }
 
     /**
@@ -189,10 +168,10 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
     }
 
     /**
-     * Getter for <code>LISTENING_PARTY_USER.TWEETS</code>.
+     * Getter for <code>LISTENING_PARTY_USER.CREATED_AT</code>.
      */
-    public Integer getTweets() {
-        return (Integer) get(9);
+    public LocalDateTime getCreatedAt() {
+        return (LocalDateTime) get(6);
     }
 
     /**
@@ -203,10 +182,10 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
     }
 
     /**
-     * Getter for <code>LISTENING_PARTY_USER.LANG</code>.
+     * Getter for <code>LISTENING_PARTY_USER.FOLLOWERS</code>.
      */
-    public String getLang() {
-        return (String) get(10);
+    public Integer getFollowers() {
+        return (Integer) get(7);
     }
 
     /**
@@ -217,10 +196,10 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
     }
 
     /**
-     * Getter for <code>LISTENING_PARTY_USER.URL</code>.
+     * Getter for <code>LISTENING_PARTY_USER.FOLLOWING</code>.
      */
-    public String getUrl() {
-        return (String) get(11);
+    public Integer getFollowing() {
+        return (Integer) get(8);
     }
 
     /**
@@ -230,9 +209,19 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
         set(11, value);
     }
 
-    // -------------------------------------------------------------------------
-    // Primary key information
-    // -------------------------------------------------------------------------
+    /**
+     * Getter for <code>LISTENING_PARTY_USER.TWEETS</code>.
+     */
+    public Integer getTweets() {
+        return (Integer) get(9);
+    }
+
+    /**
+     * Getter for <code>LISTENING_PARTY_USER.LANG</code>.
+     */
+    public String getLang() {
+        return (String) get(10);
+    }
 
     /**
      * Getter for <code>LISTENING_PARTY_USER.PROFILE_URL</code>.
@@ -242,20 +231,17 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
     }
 
     // -------------------------------------------------------------------------
-    // Record13 type implementation
+    // Primary key information
     // -------------------------------------------------------------------------
-
-    /**
-     * Setter for <code>LISTENING_PARTY_USER.PROFILE_URL</code>.
-     */
-    public void setProfileUrl(String value) {
-        set(12, value);
-    }
 
     @Override
     public Record1<Long> key() {
         return (Record1) super.key();
     }
+
+    // -------------------------------------------------------------------------
+    // Record13 type implementation
+    // -------------------------------------------------------------------------
 
     @Override
     public Row13<Long, String, String, String, String, String, LocalDateTime, Integer, Integer, Integer, String, String, String> fieldsRow() {
@@ -534,14 +520,28 @@ public class ListeningPartyUserRecord extends UpdatableRecordImpl<ListeningParty
         return this;
     }
 
-    // -------------------------------------------------------------------------
-    // Constructors
-    // -------------------------------------------------------------------------
-
     @Override
     public ListeningPartyUserRecord value13(String value) {
         setProfileUrl(value);
         return this;
+    }
+
+    /**
+     * Getter for <code>LISTENING_PARTY_USER.URL</code>.
+     */
+    public String getUrl() {
+        return (String) get(11);
+    }
+
+    // -------------------------------------------------------------------------
+    // Constructors
+    // -------------------------------------------------------------------------
+
+    /**
+     * Setter for <code>LISTENING_PARTY_USER.PROFILE_URL</code>.
+     */
+    public void setProfileUrl(String value) {
+        set(12, value);
     }
 
     @Override

@@ -5,7 +5,6 @@ import static java.lang.Integer.parseInt;
 import com.broughty.ttlptwit.aggregation.ListeningPartyTweetDto;
 import com.broughty.ttlptwit.aggregation.ListeningPartyUserDto;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyRecord;
-import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyTweetRecord;
 import com.broughty.ttlptwit.repository.ListeningPartyRepository;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +56,7 @@ public class ListeningPartyController {
   }
 
   @BatchMapping(typeName = "ListeningPartyTweet")
-  Map<ListeningPartyTweetRecord, ListeningPartyUserDto> author(List<ListeningPartyTweetRecord> listeningPartyTweets) {
+  Map<ListeningPartyTweetDto, ListeningPartyUserDto> author(List<ListeningPartyTweetDto> listeningPartyTweets) {
     LOGGER.info("getting authors for {} tweets ", listeningPartyTweets.size());
     return repository.getListeningPartiesAuthors(listeningPartyTweets);
   }

@@ -12,21 +12,21 @@ import com.broughty.ttlptwit.database.jooq.data.tables.ListeningPartyUser;
 /**
  * Convenience access to all tables in the default schema.
  */
-@SuppressWarnings({ "all", "unchecked", "rawtypes" })
+@SuppressWarnings({"all", "unchecked", "rawtypes"})
 public class Tables {
 
-  /**
-   * The table <code>LISTENING_PARTY</code>.
-   */
-  public static final ListeningParty LISTENING_PARTY = ListeningParty.LISTENING_PARTY;
+    /**
+     * The table <code>LISTENING_PARTY</code>.
+     */
+    public static final ListeningParty LISTENING_PARTY = ListeningParty.LISTENING_PARTY;
 
-  /**
-   * The table <code>LISTENING_PARTY_TWEET</code>.
-   */
-  public static final ListeningPartyTweet LISTENING_PARTY_TWEET = ListeningPartyTweet.LISTENING_PARTY_TWEET;
+    /**
+     * The table <code>LISTENING_PARTY_TWEET</code>.
+     */
+    public static final ListeningPartyTweet LISTENING_PARTY_TWEET = ListeningPartyTweet.LISTENING_PARTY_TWEET;
 
-  /**
-   * The table <code>LISTENING_PARTY_USER</code>.
-   */
-  public static final ListeningPartyUser LISTENING_PARTY_USER = ListeningPartyUser.LISTENING_PARTY_USER;
+    /**
+     * The table <code>LISTENING_PARTY_USER</code>.
+     */
+    public static final ListeningPartyUser LISTENING_PARTY_USER = ListeningPartyUser.LISTENING_PARTY_USER;
 }

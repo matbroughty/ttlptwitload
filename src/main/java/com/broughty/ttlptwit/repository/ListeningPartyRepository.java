@@ -138,9 +138,10 @@ public class ListeningPartyRepository {
   }
 
 
-  public Map<ListeningPartyTweetRecord, ListeningPartyUserDto> getListeningPartiesAuthors(final List<ListeningPartyTweetRecord> listeningPartyTweets) {
-    //listeningPartyTweets.stream().map(ListeningPartyTweetRecord::getAuthor).collect(Collectors.toList()))
+  public Map<ListeningPartyTweetDto, ListeningPartyUserDto> getListeningPartiesAuthors(final List<ListeningPartyTweetDto> listeningPartyTweets) {
+    List<String> authorIds = listeningPartyTweets.stream().map(ListeningPartyTweetDto::author).distinct().toList();
 
+    LOGGER.info("We have {} authors for {} tweets", authorIds.size(), listeningPartyTweets.size());
     List<ListeningPartyUserDto> tweetUserDtoList = dsl.select(LISTENING_PARTY_USER.ID,
                                                               LISTENING_PARTY_USER.USER_ID,
                                                               LISTENING_PARTY_USER.DISPLAY_NAME,
@@ -154,12 +155,12 @@ public class ListeningPartyRepository {
                                                               LISTENING_PARTY_USER.PROFILE_URL
                                                       )
                                                       .from(LISTENING_PARTY_USER)
-                                                      .where(LISTENING_PARTY_USER.USER_ID.in(List.of("19429176")))
+                                                      .where(LISTENING_PARTY_USER.USER_ID.in(authorIds))
                                                       .fetch().into(ListeningPartyUserDto.class);
 
-    Map<ListeningPartyTweetRecord, ListeningPartyUserDto> map = new HashMap<>();
-    for (ListeningPartyTweetRecord tweetRecord : listeningPartyTweets) {
-      map.put(tweetRecord, tweetUserDtoList.stream().filter(user -> user.userId().equals(tweetRecord.getAuthor())).findFirst().orElse(null));
+    Map<ListeningPartyTweetDto, ListeningPartyUserDto> map = new HashMap<>();
+    for (ListeningPartyTweetDto tweetRecord : listeningPartyTweets) {
+      map.put(tweetRecord, tweetUserDtoList.stream().filter(user -> user.userId().equals(tweetRecord.author())).findFirst().orElse(null));
     }
     return map;
   }
@@ -167,7 +168,7 @@ public class ListeningPartyRepository {
   /**
    * Gets all Authors of tweets in the database or reply users and if they don't exist in the LISTENING_PARTY_USER table then returns them
    *
-   * @return List of twitter user id strings that have been involved in a party but are not in the db
+   * @return List of twitter user id strings that have been involved at a party but are not in the db
    */
   public List<String> getMissingListeningPartyUsers() {
     LOGGER.debug("getMissingListeningPartyUsers");
