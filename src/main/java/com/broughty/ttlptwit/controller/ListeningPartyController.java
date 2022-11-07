@@ -3,7 +3,9 @@ package com.broughty.ttlptwit.controller;
 import static java.lang.Integer.parseInt;
 
 import com.broughty.ttlptwit.aggregation.ListeningPartyTweetDto;
+import com.broughty.ttlptwit.aggregation.ListeningPartyUserDto;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyRecord;
+import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyTweetRecord;
 import com.broughty.ttlptwit.repository.ListeningPartyRepository;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,13 @@ public class ListeningPartyController {
     LOGGER.info("getting tweets for {} parties", listeningParties.size());
     return repository.getListeningPartiesTweets(listeningParties);
   }
+
+  @BatchMapping(typeName = "ListeningPartyTweet")
+  Map<ListeningPartyTweetRecord, ListeningPartyUserDto> author(List<ListeningPartyTweetRecord> listeningPartyTweets) {
+    LOGGER.info("getting authors for {} tweets ", listeningPartyTweets.size());
+    return repository.getListeningPartiesAuthors(listeningPartyTweets);
+  }
+
 
   @MutationMapping(name = "importTweetData")
   Integer importTweetData(@Argument String apiCallId) throws Exception {

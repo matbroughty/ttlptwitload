@@ -75,6 +75,8 @@
     <java.version>17</java.version>
     <jooq.version>3.17.4</jooq.version>
   </properties>
+
+
   <version>0.0.1-SNAPSHOT</version>
 
   <build>
@@ -101,10 +103,16 @@
               <name>org.jooq.meta.extensions.liquibase.LiquibaseDatabase</name>
               <properties>
 
+                <property>
+                  <key>rootPath</key>
+                  <value>${basedir}/src/main/resources/db/changelog</value>
+                </property>
+
                 <!-- Specify the location of your XML script. -->
                 <property>
                   <key>scripts</key>
-                  <value>classpath:/db/changelog/db.changelog-master.xml</value>
+                  <!--                  <value>classpath:/db/changelog/db.changelog-master.xml</value>-->
+                  <value>db.changelog-master.xml</value>
                 </property>
 
                 <!-- Whether you want to include liquibase tables in generated output

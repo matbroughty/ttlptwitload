@@ -2,14 +2,19 @@ package com.broughty.ttlptwit.repository;
 
 import static com.broughty.ttlptwit.database.jooq.data.Tables.LISTENING_PARTY;
 import static com.broughty.ttlptwit.database.jooq.data.Tables.LISTENING_PARTY_TWEET;
+import static com.broughty.ttlptwit.database.jooq.data.Tables.LISTENING_PARTY_USER;
 
 import com.broughty.ttlptwit.aggregation.ListeningPartyTweetDto;
+import com.broughty.ttlptwit.aggregation.ListeningPartyUserDto;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyRecord;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyTweetRecord;
+import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyUserRecord;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +40,11 @@ public class ListeningPartyRepository {
   public void batchUpdateTweets(@NonNull final List<? extends ListeningPartyTweetRecord> tweetRecords) {
     LOGGER.info("Writing {} Listening Party Tweet records", tweetRecords.size());
     dsl.batchStore(tweetRecords).execute();
+  }
+
+  public void batchUpdateUsers(@NonNull final List<? extends ListeningPartyUserRecord> userRecords) {
+    LOGGER.info("Writing {} Listening Party User records", userRecords.size());
+    dsl.batchStore(userRecords).execute();
   }
 
   public List<ListeningPartyRecord> getListeningPartyList(final int start, final int pageSize) {
@@ -125,7 +135,60 @@ public class ListeningPartyRepository {
                                                                      .findFirst()
                                                                      .orElse(null),
                                             Entry::getValue));
+  }
 
+
+  public Map<ListeningPartyTweetRecord, ListeningPartyUserDto> getListeningPartiesAuthors(final List<ListeningPartyTweetRecord> listeningPartyTweets) {
+    //listeningPartyTweets.stream().map(ListeningPartyTweetRecord::getAuthor).collect(Collectors.toList()))
+
+    List<ListeningPartyUserDto> tweetUserDtoList = dsl.select(LISTENING_PARTY_USER.ID,
+                                                              LISTENING_PARTY_USER.USER_ID,
+                                                              LISTENING_PARTY_USER.DISPLAY_NAME,
+                                                              LISTENING_PARTY_USER.DESCRIPTION,
+                                                              LISTENING_PARTY_USER.TWEETS,
+                                                              LISTENING_PARTY_USER.URL,
+                                                              LISTENING_PARTY_USER.CREATED_AT,
+                                                              LISTENING_PARTY_USER.FOLLOWERS,
+                                                              LISTENING_PARTY_USER.FOLLOWING,
+                                                              LISTENING_PARTY_USER.LOCATION,
+                                                              LISTENING_PARTY_USER.PROFILE_URL
+                                                      )
+                                                      .from(LISTENING_PARTY_USER)
+                                                      .where(LISTENING_PARTY_USER.USER_ID.in(List.of("19429176")))
+                                                      .fetch().into(ListeningPartyUserDto.class);
+
+    Map<ListeningPartyTweetRecord, ListeningPartyUserDto> map = new HashMap<>();
+    for (ListeningPartyTweetRecord tweetRecord : listeningPartyTweets) {
+      map.put(tweetRecord, tweetUserDtoList.stream().filter(user -> user.userId().equals(tweetRecord.getAuthor())).findFirst().orElse(null));
+    }
+    return map;
+  }
+
+  /**
+   * Gets all Authors of tweets in the database or reply users and if they don't exist in the LISTENING_PARTY_USER table then returns them
+   *
+   * @return List of twitter user id strings that have been involved in a party but are not in the db
+   */
+  public List<String> getMissingListeningPartyUsers() {
+    LOGGER.debug("getMissingListeningPartyUsers");
+    List<String> missingAuthors = dsl
+        .selectDistinct()
+        .from(LISTENING_PARTY_TWEET)
+        .leftJoin(LISTENING_PARTY_USER)
+        .on(LISTENING_PARTY_TWEET.AUTHOR.eq(LISTENING_PARTY_USER.USER_ID))
+        .where(LISTENING_PARTY_USER.USER_ID.isNull()).fetch().getValues(LISTENING_PARTY_TWEET.AUTHOR);
+
+    List<String> missingReplyTo = dsl
+        .selectDistinct()
+        .from(LISTENING_PARTY_TWEET)
+        .leftJoin(LISTENING_PARTY_USER)
+        .on(LISTENING_PARTY_TWEET.IN_REPLY_TO_USERID.eq(LISTENING_PARTY_USER.USER_ID))
+        .where(LISTENING_PARTY_USER.USER_ID.isNull()).fetch().getValues(LISTENING_PARTY_TWEET.IN_REPLY_TO_USERID);
+    return Stream.concat(missingAuthors.stream(), missingReplyTo.stream())
+                 .distinct()
+                 .collect(Collectors.toList());
 
   }
+
+
 }

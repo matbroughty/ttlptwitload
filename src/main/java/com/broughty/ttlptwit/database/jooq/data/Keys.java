@@ -6,9 +6,10 @@ package com.broughty.ttlptwit.database.jooq.data;
 
 import com.broughty.ttlptwit.database.jooq.data.tables.ListeningParty;
 import com.broughty.ttlptwit.database.jooq.data.tables.ListeningPartyTweet;
+import com.broughty.ttlptwit.database.jooq.data.tables.ListeningPartyUser;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyRecord;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyTweetRecord;
-
+import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyUserRecord;
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
@@ -27,9 +28,20 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<ListeningPartyRecord> CONSTRAINT_C = Internal.createUniqueKey(ListeningParty.LISTENING_PARTY, DSL.name("CONSTRAINT_C"), new TableField[] { ListeningParty.LISTENING_PARTY.TTLP_NO }, true);
-    public static final UniqueKey<ListeningPartyRecord> PK_LISTENING_PARTY = Internal.createUniqueKey(ListeningParty.LISTENING_PARTY, DSL.name("PK_LISTENING_PARTY"), new TableField[] { ListeningParty.LISTENING_PARTY.TTLP_NO }, true);
-    public static final UniqueKey<ListeningPartyTweetRecord> PK_LISTENING_PARTY_TWEET = Internal.createUniqueKey(ListeningPartyTweet.LISTENING_PARTY_TWEET, DSL.name("PK_LISTENING_PARTY_TWEET"), new TableField[] { ListeningPartyTweet.LISTENING_PARTY_TWEET.ID }, true);
+    public static final UniqueKey<ListeningPartyRecord>      CONSTRAINT_C             = Internal.createUniqueKey(ListeningParty.LISTENING_PARTY, DSL.name("CONSTRAINT_C"), new TableField[] { ListeningParty.LISTENING_PARTY.TTLP_NO }, true);
+    public static final UniqueKey<ListeningPartyRecord>      PK_LISTENING_PARTY       = Internal.createUniqueKey(ListeningParty.LISTENING_PARTY, DSL.name("PK_LISTENING_PARTY"), new TableField[] { ListeningParty.LISTENING_PARTY.TTLP_NO }, true);
+    public static final UniqueKey<ListeningPartyTweetRecord>
+                                                             PK_LISTENING_PARTY_TWEET =
+        Internal.createUniqueKey(ListeningPartyTweet.LISTENING_PARTY_TWEET,
+                                 DSL.name("PK_LISTENING_PARTY_TWEET"),
+                                 new TableField[]{ListeningPartyTweet.LISTENING_PARTY_TWEET.ID},
+                                 true);
+    public static final UniqueKey<ListeningPartyUserRecord>
+                                                             PK_LISTENING_PARTY_USER  =
+        Internal.createUniqueKey(ListeningPartyUser.LISTENING_PARTY_USER,
+                                 DSL.name("PK_LISTENING_PARTY_USER"),
+                                 new TableField[]{ListeningPartyUser.LISTENING_PARTY_USER.ID},
+                                 true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions

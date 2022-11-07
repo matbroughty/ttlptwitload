@@ -6,6 +6,7 @@ package com.broughty.ttlptwit.database.jooq.data;
 
 import com.broughty.ttlptwit.database.jooq.data.tables.ListeningParty;
 import com.broughty.ttlptwit.database.jooq.data.tables.ListeningPartyTweet;
+import com.broughty.ttlptwit.database.jooq.data.tables.ListeningPartyUser;
 
 
 /**
@@ -14,13 +15,18 @@ import com.broughty.ttlptwit.database.jooq.data.tables.ListeningPartyTweet;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
 
-    /**
-     * The table <code>LISTENING_PARTY</code>.
-     */
-    public static final ListeningParty LISTENING_PARTY = ListeningParty.LISTENING_PARTY;
+  /**
+   * The table <code>LISTENING_PARTY</code>.
+   */
+  public static final ListeningParty LISTENING_PARTY = ListeningParty.LISTENING_PARTY;
 
-    /**
-     * The table <code>LISTENING_PARTY_TWEET</code>.
-     */
-    public static final ListeningPartyTweet LISTENING_PARTY_TWEET = ListeningPartyTweet.LISTENING_PARTY_TWEET;
+  /**
+   * The table <code>LISTENING_PARTY_TWEET</code>.
+   */
+  public static final ListeningPartyTweet LISTENING_PARTY_TWEET = ListeningPartyTweet.LISTENING_PARTY_TWEET;
+
+  /**
+   * The table <code>LISTENING_PARTY_USER</code>.
+   */
+  public static final ListeningPartyUser LISTENING_PARTY_USER = ListeningPartyUser.LISTENING_PARTY_USER;
 }

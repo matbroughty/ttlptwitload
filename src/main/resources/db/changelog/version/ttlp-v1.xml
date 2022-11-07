@@ -82,7 +82,29 @@
       constraintName="FK_LISTENING_PARTY_TWEET_ID"
       referencedColumnNames="TTLP_NO"
       referencedTableName="LISTENING_PARTY"/>
+  </changeSet>
 
+
+  <changeSet author="admin" id="3">
+    <createTable tableName="LISTENING_PARTY_USER">
+      <column autoIncrement="true" name="ID" type="BIGINT">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="USER_ID" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="NAME" type="VARCHAR(512)"/>
+      <column name="DISPLAY_NAME" type="VARCHAR(512)"/>
+      <column name="LOCATION" type="VARCHAR(512)"/>
+      <column name="DESCRIPTION" type="VARCHAR(512)"/>
+      <column name="CREATED_AT" type="TIMESTAMP"/>
+      <column name="FOLLOWERS" type="INT"/>
+      <column name="FOLLOWING" type="INT"/>
+      <column name="TWEETS" type="INT"/>
+      <column name="LANG" type="VARCHAR(64)"/>
+      <column name="URL" type="VARCHAR(512)"/>
+      <column name="PROFILE_URL" type="VARCHAR(512)"/>
+    </createTable>
   </changeSet>
 
 

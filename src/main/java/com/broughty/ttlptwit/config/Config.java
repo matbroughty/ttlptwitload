@@ -6,6 +6,8 @@ import com.broughty.ttlptwit.batch.ListeningParty;
 import com.broughty.ttlptwit.batch.ListeningPartyInserterCheck;
 import com.broughty.ttlptwit.batch.ListeningPartyReader;
 import com.broughty.ttlptwit.batch.ListeningPartyTweetWriter;
+import com.broughty.ttlptwit.batch.ListeningPartyUserReader;
+import com.broughty.ttlptwit.batch.ListeningPartyUserWriter;
 import com.broughty.ttlptwit.batch.ListeningPartyWriter;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyRecord;
 import io.github.redouane59.twitter.TwitterClient;
@@ -80,12 +82,15 @@ public class Config {
 
   @Bean
   public Job importListeningPartyJob(JobCompletionNotificationListener listener,
-                                     Step loadListeningParties, Step loadListeningPartyTweets) {
+                                     Step loadListeningParties, Step loadListeningPartyTweets,
+                                     Step readListeningPartyUsers, Step writeListeningPartyUsers) {
     return jobBuilderFactory.get("importListeningPartyJob")
                             .incrementer(new RunIdIncrementer())
                             .listener(listener)
                             .flow(loadListeningParties)
                             .next(loadListeningPartyTweets)
+                            .next(readListeningPartyUsers)
+                            .next(writeListeningPartyUsers)
                             .end()
                             .build();
   }
@@ -110,6 +115,16 @@ public class Config {
                              .reader(reader)
                              .writer(writer)
                              .build();
+  }
+
+  @Bean
+  public Step readListeningPartyUsers(StepBuilderFactory steps, ListeningPartyUserReader userReader) {
+    return steps.get("addListeningPartyUsers").tasklet(userReader).build();
+  }
+
+  @Bean
+  public Step writeListeningPartyUsers(StepBuilderFactory steps, ListeningPartyUserWriter userWriter) {
+    return steps.get("writeListeningPartyUsers").tasklet(userWriter).build();
   }
 
   @Bean(name = "asyncJobLauncher")
