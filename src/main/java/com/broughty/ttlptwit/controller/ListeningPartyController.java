@@ -36,12 +36,12 @@ public class ListeningPartyController {
 
   @QueryMapping(name = "listeningParties")
   List<ListeningPartyRecord> listeningParties() {
-    return repository.getListeningPartyList(0, 2000);
+    return repository.getActiveListeningPartyList(0, 2000);
   }
 
   @QueryMapping(name = "listeningPartyById")
   ListeningPartyRecord listeningPartyById(@Argument String ttlpNo) {
-    return repository.selectByTtlpId(parseInt(ttlpNo));
+    return repository.selectActiveByTtlpId(parseInt(ttlpNo));
   }
 
   @QueryMapping(name = "listeningPartyTweetsById")
@@ -54,6 +54,13 @@ public class ListeningPartyController {
     LOGGER.info("getting tweets for {} parties", listeningParties.size());
     return repository.getListeningPartiesTweets(listeningParties);
   }
+
+  @BatchMapping(typeName = "ListeningParty")
+  Map<ListeningPartyRecord, List<ListeningPartyUserDto>> tweeters(List<ListeningPartyRecord> listeningParties) {
+    LOGGER.info("getting tweeters for {} parties", listeningParties.size());
+    return repository.getListeningPartiesTweeters(listeningParties);
+  }
+
 
   @BatchMapping(typeName = "ListeningPartyTweet")
   Map<ListeningPartyTweetDto, ListeningPartyUserDto> author(List<ListeningPartyTweetDto> listeningPartyTweets) {

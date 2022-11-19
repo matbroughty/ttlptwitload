@@ -3,12 +3,16 @@ package com.broughty.ttlptwit.repository;
 import static com.broughty.ttlptwit.database.jooq.data.Tables.LISTENING_PARTY;
 import static com.broughty.ttlptwit.database.jooq.data.Tables.LISTENING_PARTY_TWEET;
 import static com.broughty.ttlptwit.database.jooq.data.Tables.LISTENING_PARTY_USER;
+import static com.broughty.ttlptwit.database.jooq.data.Tables.MISSING_USER;
 
 import com.broughty.ttlptwit.aggregation.ListeningPartyTweetDto;
 import com.broughty.ttlptwit.aggregation.ListeningPartyUserDto;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyRecord;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyTweetRecord;
+import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyTweeterRecord;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyUserRecord;
+import com.broughty.ttlptwit.database.jooq.data.tables.records.MissingUserRecord;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,21 +51,33 @@ public class ListeningPartyRepository {
     dsl.batchStore(userRecords).execute();
   }
 
-  public List<ListeningPartyRecord> getListeningPartyList(final int start, final int pageSize) {
+  public void batchUpdateMissingUsers(final List<? extends MissingUserRecord> missingUserRecords) {
+    LOGGER.info("Writing {} Missing User records", missingUserRecords.size());
+    dsl.batchStore(missingUserRecords).execute();
+  }
+
+  public void batchUpdateTweeters(final List<ListeningPartyTweeterRecord> tweeters) {
+    LOGGER.info("Writing {} Tweeter records", tweeters.size());
+    dsl.batchStore(tweeters).execute();
+  }
+
+  public List<ListeningPartyRecord> getActiveListeningPartyList(final int start, final int pageSize) {
     LOGGER.debug("Reading from start=[{}] page size=[{}]", start, pageSize);
     return dsl
         .selectFrom(LISTENING_PARTY)
+        .where(LISTENING_PARTY.ACTIVE.isTrue())
         .orderBy(LISTENING_PARTY.TTLP_NO)
         .seek(start)
         .limit(pageSize)
         .fetch();
   }
 
-  public List<ListeningPartyRecord> getListeningPartyUpdateList(final int start, final int pageSize) {
+  public List<ListeningPartyRecord> getActiveListeningPartyUpdateList(final int start, final int pageSize) {
     LOGGER.debug("Reading from start=[{}] page size=[{}]", start, pageSize);
     return dsl
         .selectFrom(LISTENING_PARTY)
         .where(LISTENING_PARTY.REQUIRES_UPDATE.isTrue())
+        .and(LISTENING_PARTY.ACTIVE.isTrue())
         .and(LISTENING_PARTY.COLLECTION_LINK.contains("timelines"))
         .orderBy(LISTENING_PARTY.TTLP_NO)
         .seek(start)
@@ -69,15 +85,16 @@ public class ListeningPartyRepository {
         .fetch();
   }
 
-  public ListeningPartyRecord selectByTtlpId(final Integer ttlpId) {
+  public ListeningPartyRecord selectActiveByTtlpId(final Integer ttlpId) {
     return dsl.selectFrom(LISTENING_PARTY)
               .where(LISTENING_PARTY.TTLP_NO.eq(ttlpId))
+              .and(LISTENING_PARTY.ACTIVE.isTrue())
               .fetchAny();
   }
 
   public List<ListeningPartyTweetDto> getListeningPartyTweets(final Integer ttlpId) {
     return
-        dsl.select(LISTENING_PARTY_TWEET.LISTENING_PARTY_ID,
+        dsl.select(LISTENING_PARTY_TWEET.TTLP_NO,
                    LISTENING_PARTY.ARTIST,
                    LISTENING_PARTY.ALBUM,
                    LISTENING_PARTY_TWEET.TWEET_ID,
@@ -92,8 +109,12 @@ public class ListeningPartyRepository {
                    LISTENING_PARTY_TWEET.CREATED_AT)
            .from(LISTENING_PARTY_TWEET)
            .innerJoin(LISTENING_PARTY)
-           .on(LISTENING_PARTY.TTLP_NO.eq(LISTENING_PARTY_TWEET.LISTENING_PARTY_ID))
-           .where(LISTENING_PARTY.TTLP_NO.eq(ttlpId)).fetch().into(ListeningPartyTweetDto.class);
+           .on(LISTENING_PARTY.TTLP_NO.eq(LISTENING_PARTY_TWEET.TTLP_NO))
+           .where(LISTENING_PARTY.ACTIVE.isTrue())
+           .and(LISTENING_PARTY_TWEET.ACTIVE.isTrue())
+           .and(LISTENING_PARTY.TTLP_NO.eq(ttlpId))
+           .fetch()
+           .into(ListeningPartyTweetDto.class);
   }
 
 
@@ -108,7 +129,7 @@ public class ListeningPartyRepository {
 
     List<Integer> partyIds = listeningParties.stream().map(ListeningPartyRecord::getTtlpNo).toList();
 
-    List<ListeningPartyTweetDto> tweetDtoList = dsl.select(LISTENING_PARTY_TWEET.LISTENING_PARTY_ID,
+    List<ListeningPartyTweetDto> tweetDtoList = dsl.select(LISTENING_PARTY_TWEET.TTLP_NO,
                                                            LISTENING_PARTY.ARTIST,
                                                            LISTENING_PARTY.ALBUM,
                                                            LISTENING_PARTY_TWEET.TWEET_ID,
@@ -124,8 +145,10 @@ public class ListeningPartyRepository {
                                                    )
                                                    .from(LISTENING_PARTY_TWEET)
                                                    .innerJoin(LISTENING_PARTY)
-                                                   .on(LISTENING_PARTY.TTLP_NO.eq(LISTENING_PARTY_TWEET.LISTENING_PARTY_ID))
-                                                   .where(LISTENING_PARTY.TTLP_NO.in(partyIds)).fetch().into(ListeningPartyTweetDto.class);
+                                                   .on(LISTENING_PARTY.TTLP_NO.eq(LISTENING_PARTY_TWEET.TTLP_NO))
+                                                   .where(LISTENING_PARTY.ACTIVE.isTrue())
+                                                   .and(LISTENING_PARTY_TWEET.ACTIVE.isTrue())
+                                                   .and(LISTENING_PARTY.TTLP_NO.in(partyIds)).fetch().into(ListeningPartyTweetDto.class);
 
     return tweetDtoList.stream()
                        .collect(Collectors.groupingBy(ListeningPartyTweetDto::ttlpNo)).entrySet().stream()
@@ -137,10 +160,38 @@ public class ListeningPartyRepository {
                                             Entry::getValue));
   }
 
+  public Map<ListeningPartyRecord, List<ListeningPartyUserDto>> getListeningPartiesTweeters(final List<ListeningPartyRecord> listeningParties) {
+    List<Integer> partyIds = listeningParties.stream().map(ListeningPartyRecord::getTtlpNo).toList();
+    Map<Integer, String> tweeters = dsl.selectFrom(LISTENING_PARTY)
+                                       .where(LISTENING_PARTY.TTLP_NO.in(partyIds))
+                                       .and(LISTENING_PARTY.COLLECTION_LINK.isNotNull())
+                                       .fetch().intoMap(LISTENING_PARTY.TTLP_NO, LISTENING_PARTY.TWEETERS);
+    tweeters.forEach((k, v) -> LOGGER.info("For party id {} we have tweeters {}", k, v));
+    List<String> userNames =
+        tweeters.values().stream().flatMap(str -> Arrays.stream(str.split(":"))).map(s -> s.replaceFirst("@", "")).toList();
+    userNames.forEach(userName -> LOGGER.info("List of user names to query {}", userName));
+    List<ListeningPartyUserDto> tweetUserDtoList = dsl.select(LISTENING_PARTY_USER.ID,
+                                                              LISTENING_PARTY_USER.USER_ID,
+                                                              LISTENING_PARTY_USER.DISPLAY_NAME,
+                                                              LISTENING_PARTY_USER.DESCRIPTION,
+                                                              LISTENING_PARTY_USER.TWEETS,
+                                                              LISTENING_PARTY_USER.URL,
+                                                              LISTENING_PARTY_USER.CREATED_AT,
+                                                              LISTENING_PARTY_USER.FOLLOWERS,
+                                                              LISTENING_PARTY_USER.FOLLOWING,
+                                                              LISTENING_PARTY_USER.LOCATION,
+                                                              LISTENING_PARTY_USER.PROFILE_URL
+                                                      )
+                                                      .from(LISTENING_PARTY_USER)
+                                                      .where(LISTENING_PARTY_USER.NAME.in(userNames))
+                                                      .fetch().into(ListeningPartyUserDto.class);
+
+    return null;
+  }
+
 
   public Map<ListeningPartyTweetDto, ListeningPartyUserDto> getListeningPartiesAuthors(final List<ListeningPartyTweetDto> listeningPartyTweets) {
     List<String> authorIds = listeningPartyTweets.stream().map(ListeningPartyTweetDto::author).distinct().toList();
-
     LOGGER.info("We have {} authors for {} tweets", authorIds.size(), listeningPartyTweets.size());
     List<ListeningPartyUserDto> tweetUserDtoList = dsl.select(LISTENING_PARTY_USER.ID,
                                                               LISTENING_PARTY_USER.USER_ID,
@@ -166,7 +217,8 @@ public class ListeningPartyRepository {
   }
 
   /**
-   * Gets all Authors of tweets in the database or reply users and if they don't exist in the LISTENING_PARTY_USER table then returns them
+   * Gets all Authors of tweets in the database or reply users and if they don't exist in the LISTENING_PARTY_USER table or the MISSING_USER table
+   * then returns them
    *
    * @return List of twitter user id strings that have been involved at a party but are not in the db
    */
@@ -177,14 +229,19 @@ public class ListeningPartyRepository {
         .from(LISTENING_PARTY_TWEET)
         .leftJoin(LISTENING_PARTY_USER)
         .on(LISTENING_PARTY_TWEET.AUTHOR.eq(LISTENING_PARTY_USER.USER_ID))
-        .where(LISTENING_PARTY_USER.USER_ID.isNull()).fetch().getValues(LISTENING_PARTY_TWEET.AUTHOR);
+        .leftJoin(MISSING_USER)
+        .on(LISTENING_PARTY_TWEET.AUTHOR.eq(MISSING_USER.USER_ID))
+        .where(LISTENING_PARTY_USER.USER_ID.isNull()).and(MISSING_USER.USER_ID.isNull()).fetch().getValues(LISTENING_PARTY_TWEET.AUTHOR);
 
     List<String> missingReplyTo = dsl
         .selectDistinct()
         .from(LISTENING_PARTY_TWEET)
         .leftJoin(LISTENING_PARTY_USER)
         .on(LISTENING_PARTY_TWEET.IN_REPLY_TO_USERID.eq(LISTENING_PARTY_USER.USER_ID))
-        .where(LISTENING_PARTY_USER.USER_ID.isNull()).fetch().getValues(LISTENING_PARTY_TWEET.IN_REPLY_TO_USERID);
+        .leftJoin(MISSING_USER)
+        .on(LISTENING_PARTY_TWEET.IN_REPLY_TO_USERID.eq(MISSING_USER.USER_ID))
+        .where(LISTENING_PARTY_USER.USER_ID.isNull()).and(MISSING_USER.USER_ID.isNull()).fetch().getValues(LISTENING_PARTY_TWEET.IN_REPLY_TO_USERID);
+
     return Stream.concat(missingAuthors.stream(), missingReplyTo.stream())
                  .distinct()
                  .collect(Collectors.toList());

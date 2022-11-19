@@ -6,7 +6,9 @@ package com.broughty.ttlptwit.database.jooq.data;
 
 import com.broughty.ttlptwit.database.jooq.data.tables.ListeningParty;
 import com.broughty.ttlptwit.database.jooq.data.tables.ListeningPartyTweet;
+import com.broughty.ttlptwit.database.jooq.data.tables.ListeningPartyTweeter;
 import com.broughty.ttlptwit.database.jooq.data.tables.ListeningPartyUser;
+import com.broughty.ttlptwit.database.jooq.data.tables.MissingUser;
 import java.util.Arrays;
 import java.util.List;
 import org.jooq.Catalog;
@@ -38,9 +40,19 @@ public class DefaultSchema extends SchemaImpl {
     public final ListeningPartyTweet LISTENING_PARTY_TWEET = ListeningPartyTweet.LISTENING_PARTY_TWEET;
 
     /**
+     * The table <code>LISTENING_PARTY_TWEETER</code>.
+     */
+    public final ListeningPartyTweeter LISTENING_PARTY_TWEETER = ListeningPartyTweeter.LISTENING_PARTY_TWEETER;
+
+    /**
      * The table <code>LISTENING_PARTY_USER</code>.
      */
     public final ListeningPartyUser LISTENING_PARTY_USER = ListeningPartyUser.LISTENING_PARTY_USER;
+
+    /**
+     * The table <code>MISSING_USER</code>.
+     */
+    public final MissingUser MISSING_USER = MissingUser.MISSING_USER;
 
     /**
      * No further instances allowed
@@ -60,7 +72,9 @@ public class DefaultSchema extends SchemaImpl {
         return Arrays.asList(
             ListeningParty.LISTENING_PARTY,
             ListeningPartyTweet.LISTENING_PARTY_TWEET,
-            ListeningPartyUser.LISTENING_PARTY_USER
+            ListeningPartyTweeter.LISTENING_PARTY_TWEETER,
+            ListeningPartyUser.LISTENING_PARTY_USER,
+            MissingUser.MISSING_USER
         );
     }
 }

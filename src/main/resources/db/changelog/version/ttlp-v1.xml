@@ -6,6 +6,9 @@
   objectQuotingStrategy="QUOTE_ALL_OBJECTS">
   <changeSet author="admin" id="1">
     <createTable tableName="LISTENING_PARTY">
+      <column autoIncrement="true" name="ID" type="BIGINT">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
       <column name="PARTY_DATE" type="TIMESTAMP">
         <constraints nullable="false"/>
       </column>
@@ -40,7 +43,7 @@
         <constraints nullable="true"/>
       </column>
       <column name="TTLP_NO" type="INT">
-        <constraints nullable="false" unique="true" primaryKey="true"/>
+        <constraints nullable="false"/>
       </column>
       <column name="LAST_STATE" type="INT" defaultValue="0">
         <constraints nullable="false"/>
@@ -48,6 +51,8 @@
       <column name="REQUIRES_UPDATE" type="BOOLEAN" defaultValue="true">
         <constraints nullable="false"/>
       </column>
+      <column defaultValue="true" name="ACTIVE" type="BOOLEAN"/>
+      <column name="CREATED_DATE" type="TIMESTAMP"/>
     </createTable>
     <rollback>
       <dropTable tableName="LISTENING_PARTY"/>
@@ -62,7 +67,7 @@
       <column name="TWEET_ID" type="VARCHAR(64)">
         <constraints nullable="false"/>
       </column>
-      <column name="LISTENING_PARTY_ID" type="INT">
+      <column name="TTLP_NO" type="INT">
         <constraints nullable="false"/>
       </column>
       <column name="TEXT" type="VARCHAR(512)"/>
@@ -75,13 +80,10 @@
       <column name="RETWEET" type="INT"/>
       <column name="GEO" type="VARCHAR(512)"/>
       <column name="ATTACHMENTS" type="VARCHAR(512)"/>
+      <column defaultValue="true" name="ACTIVE" type="BOOLEAN"/>
+      <column name="CREATED_DATE" type="TIMESTAMP"/>
     </createTable>
 
-    <addForeignKeyConstraint baseColumnNames="LISTENING_PARTY_ID"
-      baseTableName="LISTENING_PARTY_TWEET"
-      constraintName="FK_LISTENING_PARTY_TWEET_ID"
-      referencedColumnNames="TTLP_NO"
-      referencedTableName="LISTENING_PARTY"/>
   </changeSet>
 
 
@@ -104,7 +106,43 @@
       <column name="LANG" type="VARCHAR(64)"/>
       <column name="URL" type="VARCHAR(512)"/>
       <column name="PROFILE_URL" type="VARCHAR(512)"/>
+      <column defaultValue="true" name="ACTIVE" type="BOOLEAN"/>
+      <column name="CREATED_DATE" type="TIMESTAMP"/>
     </createTable>
+  </changeSet>
+
+
+  <changeSet author="admin" id="4">
+    <createTable tableName="MISSING_USER">
+      <column autoIncrement="true" name="ID" type="BIGINT">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="USER_ID" type="VARCHAR(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="UPDATED_AT" type="TIMESTAMP"/>
+      <column defaultValue="true" name="ACTIVE" type="BOOLEAN"/>
+      <column name="CREATED_DATE" type="TIMESTAMP"/>
+    </createTable>
+  </changeSet>
+
+
+  <changeSet author="admin" id="5">
+    <createTable tableName="LISTENING_PARTY_TWEETER">
+      <column autoIncrement="true" name="ID" type="BIGINT">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="DISPLAY_NAME" type="VARCHAR(512)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="TTLP_NO" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="UPDATED_AT" type="TIMESTAMP"/>
+      <column defaultValue="true" name="ACTIVE" type="BOOLEAN"/>
+      <column name="CREATED_DATE" type="TIMESTAMP"/>
+    </createTable>
+
   </changeSet>
 
 

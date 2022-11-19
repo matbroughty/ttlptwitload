@@ -31,7 +31,7 @@ public class ListeningPartyInserterCheck implements ItemProcessor<ListeningParty
       LOGGER.debug("Skipping a non listening party {}", listeningParty);
       return null;
     }
-    ListeningPartyRecord existingRecord = repository.selectByTtlpId(ListeningParty.ttlpIdAsInteger(listeningParty));
+    ListeningPartyRecord existingRecord = repository.selectActiveByTtlpId(ListeningParty.ttlpIdAsInteger(listeningParty));
     if (existingRecord == null) {
       // Need to create a new record
       LOGGER.info("Creating new Listening Party record -> {}", listeningParty);

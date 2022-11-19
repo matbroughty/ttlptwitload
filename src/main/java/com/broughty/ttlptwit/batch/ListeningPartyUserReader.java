@@ -42,7 +42,7 @@ public class ListeningPartyUserReader implements Tasklet, StepExecutionListener 
   }
 
   @Override
-  public RepeatStatus execute(final StepContribution stepContribution, final ChunkContext chunkContext) throws Exception {
+  public RepeatStatus execute(final StepContribution stepContribution, final ChunkContext chunkContext) {
     twitterUserIds = repository.getMissingListeningPartyUsers();
     return RepeatStatus.FINISHED;
   }

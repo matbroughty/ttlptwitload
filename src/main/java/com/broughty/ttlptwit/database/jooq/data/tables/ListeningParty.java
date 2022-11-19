@@ -7,19 +7,16 @@ package com.broughty.ttlptwit.database.jooq.data.tables;
 import com.broughty.ttlptwit.database.jooq.data.DefaultSchema;
 import com.broughty.ttlptwit.database.jooq.data.Keys;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyRecord;
-
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
-
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function14;
+import org.jooq.Function17;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row14;
+import org.jooq.Row17;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -53,14 +50,23 @@ public class ListeningParty extends TableImpl<ListeningPartyRecord> {
     }
 
     /**
+     * The column <code>LISTENING_PARTY.ID</code>.
+     */
+    public final TableField<ListeningPartyRecord, Long> ID = createField(DSL.name("ID"), SQLDataType.BIGINT.nullable(false).identity(true), this, "");
+
+    /**
      * The column <code>LISTENING_PARTY.PARTY_DATE</code>.
      */
-    public final TableField<ListeningPartyRecord, LocalDateTime> PARTY_DATE = createField(DSL.name("PARTY_DATE"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "");
+    public final TableField<ListeningPartyRecord, LocalDateTime>
+        PARTY_DATE =
+        createField(DSL.name("PARTY_DATE"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "");
 
     /**
      * The column <code>LISTENING_PARTY.ARTIST</code>.
      */
-    public final TableField<ListeningPartyRecord, String> ARTIST = createField(DSL.name("ARTIST"), SQLDataType.VARCHAR(512).nullable(false), this, "");
+    public final TableField<ListeningPartyRecord, String>
+        ARTIST =
+        createField(DSL.name("ARTIST"), SQLDataType.VARCHAR(512).nullable(false), this, "");
 
     /**
      * The column <code>LISTENING_PARTY.ALBUM</code>.
@@ -115,12 +121,30 @@ public class ListeningParty extends TableImpl<ListeningPartyRecord> {
     /**
      * The column <code>LISTENING_PARTY.LAST_STATE</code>.
      */
-    public final TableField<ListeningPartyRecord, Integer> LAST_STATE = createField(DSL.name("LAST_STATE"), SQLDataType.INTEGER.nullable(false).defaultValue(DSL.field("0", SQLDataType.INTEGER)), this, "");
+    public final TableField<ListeningPartyRecord, Integer>
+        LAST_STATE =
+        createField(DSL.name("LAST_STATE"), SQLDataType.INTEGER.nullable(false).defaultValue(DSL.field("0", SQLDataType.INTEGER)), this, "");
 
     /**
      * The column <code>LISTENING_PARTY.REQUIRES_UPDATE</code>.
      */
-    public final TableField<ListeningPartyRecord, Boolean> REQUIRES_UPDATE = createField(DSL.name("REQUIRES_UPDATE"), SQLDataType.BOOLEAN.nullable(false).defaultValue(DSL.field("TRUE", SQLDataType.BOOLEAN)), this, "");
+    public final TableField<ListeningPartyRecord, Boolean>
+        REQUIRES_UPDATE =
+        createField(DSL.name("REQUIRES_UPDATE"), SQLDataType.BOOLEAN.nullable(false).defaultValue(DSL.field("TRUE", SQLDataType.BOOLEAN)), this, "");
+
+    /**
+     * The column <code>LISTENING_PARTY.ACTIVE</code>.
+     */
+    public final TableField<ListeningPartyRecord, Boolean>
+        ACTIVE =
+        createField(DSL.name("ACTIVE"), SQLDataType.BOOLEAN.defaultValue(DSL.field("TRUE", SQLDataType.BOOLEAN)), this, "");
+
+    /**
+     * The column <code>LISTENING_PARTY.CREATED_DATE</code>.
+     */
+    public final TableField<ListeningPartyRecord, LocalDateTime>
+        CREATED_DATE =
+        createField(DSL.name("CREATED_DATE"), SQLDataType.LOCALDATETIME(6), this, "");
 
     private ListeningParty(Name alias, Table<ListeningPartyRecord> aliased) {
         this(alias, aliased, null);
@@ -161,13 +185,13 @@ public class ListeningParty extends TableImpl<ListeningPartyRecord> {
     }
 
     @Override
-    public UniqueKey<ListeningPartyRecord> getPrimaryKey() {
-        return Keys.PK_LISTENING_PARTY;
+    public Identity<ListeningPartyRecord, Long> getIdentity() {
+        return (Identity<ListeningPartyRecord, Long>) super.getIdentity();
     }
 
     @Override
-    public List<UniqueKey<ListeningPartyRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.CONSTRAINT_C);
+    public UniqueKey<ListeningPartyRecord> getPrimaryKey() {
+        return Keys.PK_LISTENING_PARTY;
     }
 
     @Override
@@ -210,18 +234,18 @@ public class ListeningParty extends TableImpl<ListeningPartyRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row14 type methods
+    // Row17 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row14<LocalDateTime, String, String, String, String, String, String, String, String, String, String, Integer, Integer, Boolean> fieldsRow() {
-        return (Row14) super.fieldsRow();
+    public Row17<Long, LocalDateTime, String, String, String, String, String, String, String, String, String, String, Integer, Integer, Boolean, Boolean, LocalDateTime> fieldsRow() {
+        return (Row17) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function14<? super LocalDateTime, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super Integer, ? super Integer, ? super Boolean, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function17<? super Long, ? super LocalDateTime, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super Integer, ? super Integer, ? super Boolean, ? super Boolean, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -229,7 +253,8 @@ public class ListeningParty extends TableImpl<ListeningPartyRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function14<? super LocalDateTime, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super Integer, ? super Integer, ? super Boolean, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType,
+                                      Function17<? super Long, ? super LocalDateTime, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String, ? super Integer, ? super Integer, ? super Boolean, ? super Boolean, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

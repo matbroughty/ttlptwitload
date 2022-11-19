@@ -7,20 +7,16 @@ package com.broughty.ttlptwit.database.jooq.data.tables;
 import com.broughty.ttlptwit.database.jooq.data.DefaultSchema;
 import com.broughty.ttlptwit.database.jooq.data.Keys;
 import com.broughty.ttlptwit.database.jooq.data.tables.records.ListeningPartyTweetRecord;
-
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
-
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function13;
+import org.jooq.Function15;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row13;
+import org.jooq.Row15;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -64,9 +60,11 @@ public class ListeningPartyTweet extends TableImpl<ListeningPartyTweetRecord> {
     public final TableField<ListeningPartyTweetRecord, String> TWEET_ID = createField(DSL.name("TWEET_ID"), SQLDataType.VARCHAR(64).nullable(false), this, "");
 
     /**
-     * The column <code>LISTENING_PARTY_TWEET.LISTENING_PARTY_ID</code>.
+     * The column <code>LISTENING_PARTY_TWEET.TTLP_NO</code>.
      */
-    public final TableField<ListeningPartyTweetRecord, Integer> LISTENING_PARTY_ID = createField(DSL.name("LISTENING_PARTY_ID"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<ListeningPartyTweetRecord, Integer>
+        TTLP_NO =
+        createField(DSL.name("TTLP_NO"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>LISTENING_PARTY_TWEET.TEXT</code>.
@@ -118,6 +116,20 @@ public class ListeningPartyTweet extends TableImpl<ListeningPartyTweetRecord> {
      */
     public final TableField<ListeningPartyTweetRecord, String> ATTACHMENTS = createField(DSL.name("ATTACHMENTS"), SQLDataType.VARCHAR(512), this, "");
 
+    /**
+     * The column <code>LISTENING_PARTY_TWEET.ACTIVE</code>.
+     */
+    public final TableField<ListeningPartyTweetRecord, Boolean>
+        ACTIVE =
+        createField(DSL.name("ACTIVE"), SQLDataType.BOOLEAN.defaultValue(DSL.field("TRUE", SQLDataType.BOOLEAN)), this, "");
+
+    /**
+     * The column <code>LISTENING_PARTY_TWEET.CREATED_DATE</code>.
+     */
+    public final TableField<ListeningPartyTweetRecord, LocalDateTime>
+        CREATED_DATE =
+        createField(DSL.name("CREATED_DATE"), SQLDataType.LOCALDATETIME(6), this, "");
+
     private ListeningPartyTweet(Name alias, Table<ListeningPartyTweetRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -167,24 +179,6 @@ public class ListeningPartyTweet extends TableImpl<ListeningPartyTweetRecord> {
     }
 
     @Override
-    public List<ForeignKey<ListeningPartyTweetRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.FK_LISTENING_PARTY_TWEET_ID);
-    }
-
-    private transient ListeningParty _listeningParty;
-
-    /**
-     * Get the implicit join path to the <code>PUBLIC.LISTENING_PARTY</code>
-     * table.
-     */
-    public ListeningParty listeningParty() {
-        if (_listeningParty == null)
-            _listeningParty = new ListeningParty(this, Keys.FK_LISTENING_PARTY_TWEET_ID);
-
-        return _listeningParty;
-    }
-
-    @Override
     public ListeningPartyTweet as(String alias) {
         return new ListeningPartyTweet(DSL.name(alias), this);
     }
@@ -224,18 +218,18 @@ public class ListeningPartyTweet extends TableImpl<ListeningPartyTweetRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row13 type methods
+    // Row15 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row13<Long, String, Integer, String, String, String, LocalDateTime, Integer, Integer, Integer, Integer, String, String> fieldsRow() {
-        return (Row13) super.fieldsRow();
+    public Row15<Long, String, Integer, String, String, String, LocalDateTime, Integer, Integer, Integer, Integer, String, String, Boolean, LocalDateTime> fieldsRow() {
+        return (Row15) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function13<? super Long, ? super String, ? super Integer, ? super String, ? super String, ? super String, ? super LocalDateTime, ? super Integer, ? super Integer, ? super Integer, ? super Integer, ? super String, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function15<? super Long, ? super String, ? super Integer, ? super String, ? super String, ? super String, ? super LocalDateTime, ? super Integer, ? super Integer, ? super Integer, ? super Integer, ? super String, ? super String, ? super Boolean, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -243,7 +237,8 @@ public class ListeningPartyTweet extends TableImpl<ListeningPartyTweetRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function13<? super Long, ? super String, ? super Integer, ? super String, ? super String, ? super String, ? super LocalDateTime, ? super Integer, ? super Integer, ? super Integer, ? super Integer, ? super String, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType,
+                                      Function15<? super Long, ? super String, ? super Integer, ? super String, ? super String, ? super String, ? super LocalDateTime, ? super Integer, ? super Integer, ? super Integer, ? super Integer, ? super String, ? super String, ? super Boolean, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

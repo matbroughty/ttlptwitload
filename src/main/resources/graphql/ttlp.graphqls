@@ -12,6 +12,7 @@ type ListeningParty {
     collectionLink: String
     partyDate: String
     listeningPartyTweets: [ListeningPartyTweet]
+    tweeters: [ListeningPartyUser]
 }
 
 type ListeningPartyTweet {

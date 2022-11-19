@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 import java.util.function.Function;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function13;
+import org.jooq.Function15;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row13;
+import org.jooq.Row15;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -117,6 +117,18 @@ public class ListeningPartyUser extends TableImpl<ListeningPartyUserRecord> {
     public final         TableField<ListeningPartyUserRecord, String>
                                                                              PROFILE_URL          =
         createField(DSL.name("PROFILE_URL"), SQLDataType.VARCHAR(512), this, "");
+    /**
+     * The column <code>LISTENING_PARTY_USER.ACTIVE</code>.
+     */
+    public final         TableField<ListeningPartyUserRecord, Boolean>
+                                                                             ACTIVE               =
+        createField(DSL.name("ACTIVE"), SQLDataType.BOOLEAN.defaultValue(DSL.field("TRUE", SQLDataType.BOOLEAN)), this, "");
+    /**
+     * The column <code>LISTENING_PARTY_USER.CREATED_DATE</code>.
+     */
+    public final         TableField<ListeningPartyUserRecord, LocalDateTime>
+                                                                             CREATED_DATE         =
+        createField(DSL.name("CREATED_DATE"), SQLDataType.LOCALDATETIME(6), this, "");
 
     /**
      * The class holding records for this type
@@ -214,18 +226,18 @@ public class ListeningPartyUser extends TableImpl<ListeningPartyUserRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row13 type methods
+    // Row15 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row13<Long, String, String, String, String, String, LocalDateTime, Integer, Integer, Integer, String, String, String> fieldsRow() {
-        return (Row13) super.fieldsRow();
+    public Row15<Long, String, String, String, String, String, LocalDateTime, Integer, Integer, Integer, String, String, String, Boolean, LocalDateTime> fieldsRow() {
+        return (Row15) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function13<? super Long, ? super String, ? super String, ? super String, ? super String, ? super String, ? super LocalDateTime, ? super Integer, ? super Integer, ? super Integer, ? super String, ? super String, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function15<? super Long, ? super String, ? super String, ? super String, ? super String, ? super String, ? super LocalDateTime, ? super Integer, ? super Integer, ? super Integer, ? super String, ? super String, ? super String, ? super Boolean, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -234,7 +246,7 @@ public class ListeningPartyUser extends TableImpl<ListeningPartyUserRecord> {
      * Function)}.
      */
     public <U> SelectField<U> mapping(Class<U> toType,
-                                      Function13<? super Long, ? super String, ? super String, ? super String, ? super String, ? super String, ? super LocalDateTime, ? super Integer, ? super Integer, ? super Integer, ? super String, ? super String, ? super String, ? extends U> from) {
+                                      Function15<? super Long, ? super String, ? super String, ? super String, ? super String, ? super String, ? super LocalDateTime, ? super Integer, ? super Integer, ? super Integer, ? super String, ? super String, ? super String, ? super Boolean, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

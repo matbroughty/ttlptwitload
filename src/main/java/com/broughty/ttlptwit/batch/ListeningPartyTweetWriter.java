@@ -9,6 +9,7 @@ import com.broughty.ttlptwit.repository.ListeningPartyRepository;
 import io.github.redouane59.twitter.TwitterClient;
 import io.github.redouane59.twitter.dto.collections.CollectionsResponse;
 import io.github.redouane59.twitter.dto.tweet.TweetList;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -103,7 +104,7 @@ public class ListeningPartyTweetWriter implements ItemWriter<ListeningPartyRecor
                                                                                              .getMediaKeys())
                                                                             .toList()
                                                                             .toString()
-                                                                    : null
+                                                                    : null, true, LocalDateTime.now()
                     ))
                     .peek(lpr -> lpr.changed(LISTENING_PARTY_TWEET.ID, false))
                     .collect(Collectors.toList());

@@ -1,5 +1,6 @@
 package com.broughty.ttlptwit.batch;
 
+import static com.broughty.ttlptwit.database.jooq.data.tables.ListeningParty.LISTENING_PARTY;
 import static liquibase.repackaged.org.apache.commons.lang3.StringUtils.isNotBlank;
 import static liquibase.repackaged.org.apache.commons.lang3.StringUtils.substringAfter;
 
@@ -33,7 +34,7 @@ public record ListeningParty(String date, String artist, String album, String an
    * <a href="https://developer.twitter.com/en/docs/twitter-api/v1/tweets/curate-a-collection/api-reference/get-collections-entries">here</a>
    *
    * @param collectionUrl takes the full collection url
-   * @return the custom- collection id
+   * @return the custom-collection id
    */
   public static String twitterCollection(String collectionUrl) {
     String collection = substringAfter(collectionUrl, "timelines/");
@@ -51,10 +52,15 @@ public record ListeningParty(String date, String artist, String album, String an
    * @return a new {@link ListeningPartyRecord} based on the listeningParty
    */
   public static ListeningPartyRecord toDatabaseRecord(ListeningParty listeningParty) {
-    return new ListeningPartyRecord(LocalDateTime.parse(listeningParty.date, DateTimeFormatter.ISO_DATE_TIME), listeningParty.artist,
-                                    listeningParty.album, listeningParty.announcement, listeningParty.replay, listeningParty.tweeters,
-                                    listeningParty.collection, listeningParty.albumLink, listeningParty.image3, listeningParty.image2,
-                                    listeningParty.releaseDate, ttlpIdAsInteger(listeningParty), listeningParty.hashCode(), true);
+    ListeningPartyRecord
+        lpr =
+        new ListeningPartyRecord(null, LocalDateTime.parse(listeningParty.date, DateTimeFormatter.ISO_DATE_TIME), listeningParty.artist,
+                                 listeningParty.album, listeningParty.announcement, listeningParty.replay, listeningParty.tweeters,
+                                 listeningParty.collection, listeningParty.albumLink, listeningParty.image3, listeningParty.image2,
+                                 listeningParty.releaseDate, ttlpIdAsInteger(listeningParty), listeningParty.hashCode(),
+                                 true, true, LocalDateTime.now());
+    lpr.changed(LISTENING_PARTY.ID, false);
+    return lpr;
   }
 
 

@@ -19,7 +19,7 @@ public class ListeningPartyReader extends AbstractPagingItemReader<ListeningPart
   @Override
   protected void doReadPage() {
     int start = getPage() * getPageSize();
-    results = new CopyOnWriteArrayList<>(repository.getListeningPartyUpdateList(start, getPageSize()));
+    results = new CopyOnWriteArrayList<>(repository.getActiveListeningPartyUpdateList(start, getPageSize()));
   }
 
   @Override
